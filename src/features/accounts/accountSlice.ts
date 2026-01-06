@@ -48,12 +48,17 @@ interface ConvertingCurrencyAction extends Action {
   type: "account/convertingCurrency";
 }
 
+interface ConversionErrorAction extends Action {
+  type: "account/conversionError";
+}
+
 type AccountActions =
   | DepositAction
   | WithdrawAction
   | RequestLoanAction
   | PayLoanAction
-  | ConvertingCurrencyAction;
+  | ConvertingCurrencyAction
+  | ConversionErrorAction;
 
 export default function accountReducer(
   state: AccountState = accountInitialState,
@@ -96,6 +101,11 @@ export default function accountReducer(
         ...state,
         isLoading: true,
       };
+    case "account/conversionError":
+      return {
+        ...state,
+        isLoading: false,
+      };
     default:
       return state;
   }
@@ -109,14 +119,24 @@ export function deposit(
 
   return async function (dispatch) {
     dispatch({ type: "account/convertingCurrency" });
-    const host = "api.frankfurter.app";
-    const response = await fetch(
-      `https://${host}/latest?amount=${amount}&from=${currency}&to=USD`
-    );
-    const data = await response.json();
-    const convertedAmount = data.rates.USD;
+    try {
+      const host = "api.frankfurter.app";
+      const response = await fetch(
+        `https://${host}/latest?amount=${amount}&from=${currency}&to=USD`
+      );
 
-    dispatch({ type: "account/deposit", payload: convertedAmount });
+      if (!response.ok) {
+        throw new Error("Failed to fetch exchange rate");
+      }
+
+      const data = await response.json();
+      const convertedAmount = data.rates.USD;
+
+      dispatch({ type: "account/deposit", payload: convertedAmount });
+    } catch (error) {
+      console.error("Error converting currency:", error);
+      dispatch({ type: "account/conversionError" });
+    }
   };
 }
 
