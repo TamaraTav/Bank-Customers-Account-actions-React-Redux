@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
+import "./BalanceDisplay.css";
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-US", {
@@ -14,12 +15,17 @@ export default function BalanceDisplay() {
   );
 
   return (
-    <div>
-      <h1>Balance: {formatCurrency(balance)}</h1>
+    <div className="balance-display">
+      <div className="balance-card">
+        <div className="balance-label">Account Balance</div>
+        <div className="balance-amount">{formatCurrency(balance)}</div>
+      </div>
       {loan > 0 && (
-        <h2>
-          Loan: {formatCurrency(loan)} (Purpose: {loanPurpose})
-        </h2>
+        <div className="loan-card">
+          <div className="loan-label">Active Loan</div>
+          <div className="loan-amount">{formatCurrency(loan)}</div>
+          <div className="loan-purpose">Purpose: {loanPurpose}</div>
+        </div>
       )}
     </div>
   );
