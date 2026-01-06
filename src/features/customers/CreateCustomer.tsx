@@ -30,7 +30,7 @@ export default function CreateCustomer() {
         </div>
 
         <div>
-          <label htmlFor="nationalId">Customer Natioanl ID</label>
+          <label htmlFor="nationalId">Customer National ID</label>
           <input
             type="text"
             id="nationalId"

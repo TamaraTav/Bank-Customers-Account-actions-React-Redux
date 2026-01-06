@@ -11,33 +11,32 @@ export default function AccountOperations() {
   const [currency, setCurrency] = useState<string>("USD");
 
   const { isLoading } = useSelector((store: RootState) => store.account);
-  console.log(isLoading);
 
   const dispatch = useDispatch<AppDispatch>();
 
   const handleDeposit = () => {
-    if (!depositAmount) return;
+    if (!depositAmount || +depositAmount <= 0) return;
 
     dispatch(deposit(+depositAmount, currency));
     setDepositAmount("");
   };
 
   const handleWithdraw = () => {
-    if (!withdrawAmount) return;
+    if (!withdrawAmount || +withdrawAmount <= 0) return;
 
     dispatch(withdraw(+withdrawAmount));
     setWithdrawAmount("");
   };
 
   const handleRequestLoan = () => {
-    if (!loanAmount) return;
+    if (!loanAmount || +loanAmount <= 0 || !loanPurpose.trim()) return;
 
     dispatch(requestLoan(+loanAmount, loanPurpose));
     setLoanAmount("");
     setLoanPurpose("");
   };
 
-  const handlepayLoan = () => {
+  const handlePayLoan = () => {
     dispatch(payLoan());
   };
 
@@ -95,7 +94,7 @@ export default function AccountOperations() {
         </div>
 
         <div>
-          <button onClick={handlepayLoan}>Pay Loan</button>
+          <button onClick={handlePayLoan}>Pay Loan</button>
         </div>
       </div>
     </div>
