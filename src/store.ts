@@ -2,7 +2,6 @@ import {
   legacy_createStore as createStore,
   combineReducers,
   applyMiddleware,
-  type Reducer,
 } from "redux";
 import accountReducer from "./features/accounts/accountSlice";
 import custumerReducer from "./features/customers/customerSlice";
@@ -17,10 +16,8 @@ const rootReducer = combineReducers({
 
 export type RootState = ReturnType<typeof rootReducer>;
 
-const store = createStore(
-  rootReducer as unknown as Reducer<RootState, AnyAction>,
-  applyMiddleware(thunk)
-);
+// @ts-expect-error - Redux 5 type compatibility issue with combineReducers
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export type AppDispatch = ThunkDispatch<RootState, unknown, AnyAction>;
 
