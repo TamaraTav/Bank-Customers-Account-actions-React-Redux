@@ -16,8 +16,11 @@ const rootReducer = combineReducers({
 
 export type RootState = ReturnType<typeof rootReducer>;
 
-// @ts-expect-error - Redux 5 type compatibility issue with combineReducers
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const store = createStore(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  rootReducer as any,
+  applyMiddleware(thunk)
+);
 
 export type AppDispatch = ThunkDispatch<RootState, unknown, AnyAction>;
 
