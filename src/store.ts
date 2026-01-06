@@ -2,6 +2,7 @@ import {
   legacy_createStore as createStore,
   combineReducers,
   applyMiddleware,
+  type Reducer,
 } from "redux";
 import accountReducer from "./features/accounts/accountSlice";
 import custumerReducer from "./features/customers/customerSlice";
@@ -17,8 +18,7 @@ const rootReducer = combineReducers({
 export type RootState = ReturnType<typeof rootReducer>;
 
 const store = createStore(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  rootReducer as any,
+  rootReducer as unknown as Reducer<RootState, AnyAction>,
   applyMiddleware(thunk)
 );
 
